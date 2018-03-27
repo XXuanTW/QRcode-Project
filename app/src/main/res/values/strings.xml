@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">QRcode</string>
+    <string name="button1">Button1</string>
+    <string name="qrcode">QRcode</string>
+    <string name="textview2">簽到完成</string>
+    <string name="open">Drawer Open</string>
+    <string name="close">Drawer Close</string>
+</resources>
