@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -21,9 +22,9 @@ import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -32,14 +33,17 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+
 public class MainActivity extends AppCompatActivity {
     SurfaceView QRcord;
     TextView textView;
+    TextView textQRcodeRead;
     BarcodeDetector barcodeDetector;
     CameraSource cameraSource;
     Toolbar toolbar;
     DrawerLayout drawerlayout;
     NavigationView liftmenu;
+    Button QRbutton;
     final int CameraID = 1001;
 
 
@@ -52,10 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
         QRcord = (SurfaceView) findViewById(R.id.QRcode);
         textView = (TextView) findViewById(R.id.textview1);
-        liftmenu = (NavigationView)findViewById(R.id.liftbutton_main);
-        drawerlayout = (DrawerLayout)findViewById(R.id.drawerlayout_main);
+        liftmenu = (NavigationView) findViewById(R.id.liftbutton_main);
+        drawerlayout = (DrawerLayout) findViewById(R.id.drawerlayout_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        QRbutton = (Button) findViewById(R.id.QRbutton);
+        textQRcodeRead = (TextView) findViewById(R.id.textview2);
         settoolbar();
         setliftmenu();
 
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 try {
                     cameraSource.start(QRcord.getHolder());
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> qrcodes = detections.getDetectedItems();
-                if(qrcodes.size() != 0)
+                if (qrcodes.size() != 0)
                     textView.post(new Runnable() {
                         @Override
                         public void run() {
@@ -123,8 +128,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        QRbutton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                String url="http://10.0.2.2/testget.php?age=20";
+                textQRcodeRead.setText("");
+            }
+        });
     }
+
     //左側表單menu
     private void setliftmenu() {
         liftmenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
