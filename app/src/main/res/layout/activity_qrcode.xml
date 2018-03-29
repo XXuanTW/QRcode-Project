@@ -17,6 +17,24 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <ImageView
+            android:id="@+id/QRcodeImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:clickable="false"
+            android:keepScreenOn="false"
+            android:longClickable="false"
+            android:scrollbars="none" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/QRcodeIDRead"
+            android:gravity="center_horizontal"
+            android:text="QRcode"
+            android:layout_below="@+id/QRcodeImage"/>
     </RelativeLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/liftbutton_QRcode"

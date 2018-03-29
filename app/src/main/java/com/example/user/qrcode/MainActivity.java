@@ -110,9 +110,10 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(5000);
+                            vibrator.vibrate(500);
                             textView.setText(qrcodes.valueAt(0).displayValue);
                             runCode();
+
                         }
 
                         private void runCode() {
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    //左側表單menu
     private void setliftmenu() {
         liftmenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -140,10 +141,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.action_qrcode) {
                     // 按下「QRcode模式」要做的事
+                    //傳送數值
+                    // Bundle
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, QRcodeActivity.class);
-                    startActivity(intent);
                     MainActivity.this.finish();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("QRcodeID",textView.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                     return true;
                 }
                 return false;
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.inflateMenu(R.menu.menu);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);//toolbar 上面
 
 
         ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerlayout, toolbar, R.string.open, R.string.close) {
