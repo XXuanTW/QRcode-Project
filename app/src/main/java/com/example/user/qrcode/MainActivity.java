@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -30,6 +31,11 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 
@@ -131,8 +137,26 @@ public class MainActivity extends AppCompatActivity {
         QRbutton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                String url="http://10.0.2.2/testget.php?age=20";
-                textQRcodeRead.setText("");
+//              String url="http://10.0.2.2/testget.php?age=20";
+
+                new Thread(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        Looper.prepare();
+                         //TODO Auto-generated method stub
+                        HttpClient client = new DefaultHttpClient();
+                        HttpGet myget = new HttpGet("http://10.0.2.2/testget.php?age=900");
+                        try {
+                            HttpResponse response = client.execute(myget);
+                            textQRcodeRead.setText(String.valueOf(response));
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                        }
+                        Looper.loop();
+                    }}).start();
+//                textQRcodeRead.setText("");
             }
         });
     }
