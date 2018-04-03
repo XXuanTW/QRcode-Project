@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Looper;
 import android.os.Vibrator;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -36,8 +38,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerlayout;
     NavigationView liftmenu;
     Button QRbutton;
+    String url;
+//    String url="http://10.0.2.2/testget.php?age=";
     final int CameraID = 1001;
 
 
@@ -138,7 +150,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //              String url="http://10.0.2.2/testget.php?age=20";
-
+//                url =  url+textQRcodeRead.getText();
+                url ="http://10.0.2.2/QRcodeTest.php?qrcodeid=";
+                url =  url+textView.getText().toString();
                 new Thread(new Runnable(){
 
                     @Override
@@ -146,19 +160,70 @@ public class MainActivity extends AppCompatActivity {
                         Looper.prepare();
                          //TODO Auto-generated method stub
                         HttpClient client = new DefaultHttpClient();
-                        HttpGet myget = new HttpGet("http://10.0.2.2/testget.php?age=900");
+                        HttpGet myget = new HttpGet(url);
                         try {
                             HttpResponse response = client.execute(myget);
-                            textQRcodeRead.setText(String.valueOf(response));
+//                            textQRcodeRead.setText(String.valueOf(response));
                         } catch (Exception e) {
 
                             e.printStackTrace();
                         }
                         Looper.loop();
                     }}).start();
+
+                new TransTask().execute(url);
 //                textQRcodeRead.setText("");
             }
         });
+    }
+    //Json 解析
+    class TransTask extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... params) {
+            StringBuilder sb = new StringBuilder();
+            try {
+                URL url = new URL(params[0]);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(url.openStream()));
+                String line = in.readLine();
+                while (line != null) {
+                    Log.d("HTTP", line);
+                    sb.append(line);
+                    line = in.readLine();
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return sb.toString();
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d("JSON", s);
+            parseJSON(s);
+        }
+
+        private void parseJSON(String s) {
+            ArrayList<Json> trans = new ArrayList<>();
+
+            try {
+                JSONArray array = new JSONArray(s);
+                for (int i=0; i<array.length(); i++){
+                    JSONObject obj = array.getJSONObject(i);
+                    int id = obj.getInt("id");
+                    int age = obj.getInt("age");
+                    int checkid = obj.getInt("checkid");
+                    String time = obj.getString("time");
+                    String username = obj.getString("username");
+                    Json t = new Json(id, age, checkid, username,time);
+                    textQRcodeRead.setText(String.valueOf(checkid));
+                    trans.add(t);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //左側表單menu
