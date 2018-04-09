@@ -4,17 +4,18 @@ public class Json {
     int id;
     int age;
     int checkid;
+    String phone;
     String username;
     String time;
 
-    public Json(int id, int age, int checkid, String username, String time) {
+    public Json(int id, int age, int checkid, String phone, String username, String time) {
         this.id = id;
         this.age = age;
         this.checkid = checkid;
+        this.phone = phone;
         this.username = username;
         this.time = time;
     }
-
 
     public int getId() {
         return id;
@@ -42,6 +43,14 @@ public class Json {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setCheckid(int checkid) {

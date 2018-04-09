@@ -140,7 +140,27 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         private void runCode() {
+                            url ="http://10.0.2.2/QRcodeTest.php?qrcodeid=";
+                            url =  url+textView.getText().toString();
+                            new Thread(new Runnable(){
 
+                                @Override
+                                public void run() {
+                                    Looper.prepare();
+                                    //TODO Auto-generated method stub
+                                    HttpClient client = new DefaultHttpClient();
+                                    HttpGet myget = new HttpGet(url);
+                                    try {
+                                        HttpResponse response = client.execute(myget);
+//                            textQRcodeRead.setText(String.valueOf(response));
+                                    } catch (Exception e) {
+
+                                        e.printStackTrace();
+                                    }
+                                    Looper.loop();
+                                }}).start();
+
+                            new TransTask().execute(url);
                         }
                     });
             }
@@ -216,7 +236,8 @@ public class MainActivity extends AppCompatActivity {
                     int checkid = obj.getInt("checkid");
                     String time = obj.getString("time");
                     String username = obj.getString("username");
-                    Json t = new Json(id, age, checkid, username,time);
+                    String phone = obj.getString("phone");
+                    Json t = new Json(id, age, checkid, username,time,phone);
                     textQRcodeRead.setText(String.valueOf(checkid));
                     trans.add(t);
                 }
